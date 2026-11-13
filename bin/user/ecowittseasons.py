@@ -128,6 +128,54 @@ def loop_json_location(config_dict):
     return os.path.abspath(path), enabled
 
 
+def find_loop_json(config_dict, skin_dict, live):
+    """(url, other urls to try, enabled) of ecwLoop.json, relative to this report's pages.
+
+    [LiveConditions] url, if set, is used as it is. Otherwise the file is looked for where
+    weewx-ecowittGateway is set to write it ([EcowittGateway] [[loop_json]] path), then in this
+    report's folder, the web pages folder of [StdReport] and the folder above this report's.
+    The first that exists is used; the page tries the others if it can't fetch that one."""
+    loop_path, enabled = loop_json_location(config_dict)
+    report_root = os.path.abspath(os.path.join(config_dict.get("WEEWX_ROOT", ""), skin_dict["HTML_ROOT"]))
+    html_root = os.path.abspath(os.path.join(config_dict.get("WEEWX_ROOT", ""),
+                                             config_dict.get("StdReport", {}).get("HTML_ROOT", "public_html")))
+    configured = str(live.get("url", "")).strip()
+    paths = []
+    for path in (loop_path, os.path.join(report_root, "ecwLoop.json"), os.path.join(html_root, "ecwLoop.json"),
+                 os.path.join(os.path.dirname(report_root), "ecwLoop.json")):
+        path = os.path.abspath(path)
+        if path not in paths:
+            paths.append(path)
+    found = [p for p in paths if os.path.isfile(p)]
+    chosen = found[0] if found else loop_path
+
+    def rel(path):
+        return os.path.relpath(path, report_root).replace(os.sep, "/")
+
+    urls = []
+    for u in ([configured] if configured else []) + [rel(chosen)] + [rel(p) for p in paths]:
+        if u not in urls:
+            urls.append(u)
+    url = urls[0]
+    key = ("loop_json_path", url)
+    if key not in _warned:
+        _warned.add(key)
+        if configured:
+            log.info("ecowittSeasons: live data from %s ([LiveConditions] url)", configured)
+        elif found:
+            log.info("ecowittSeasons: live data from %s (fetched by the pages as %s)", chosen, url)
+        elif not enabled:
+            log.warning("ecowittSeasons: [EcowittGateway] [[loop_json]] is not enabled and no ecwLoop.json was "
+                        "found; current conditions will show the last archive record")
+        else:
+            log.warning("ecowittSeasons: %s not found (yet); the pages will look for it as %s",
+                        loop_path, ", ".join(urls))
+    if found and not configured and chosen != loop_path and enabled:
+        _warn_once("loop_json_moved", "ecowittSeasons: ecwLoop.json found at %s, not at %s where "
+                   "[EcowittGateway] [[loop_json]] says it is written", chosen, loop_path)
+    return url, urls, enabled or bool(found)
+
+
 def linear_conversion(group, from_unit, to_unit):
     """[factor, offset] that converts from_unit to to_unit, or None if the two can't be converted linearly."""
     if from_unit == to_unit:
@@ -155,14 +203,7 @@ class EcowittSeasonsSearchList(SearchList):
         labels = skin_dict.get("Labels", {}).get("Generic", {})
 
         # Where ecwLoop.json is, relative to this report's pages
-        loop_path, loop_enabled = loop_json_location(gen.config_dict)
-        report_root = os.path.abspath(os.path.join(gen.config_dict.get("WEEWX_ROOT", ""), skin_dict["HTML_ROOT"]))
-        url = str(live.get("url", "")).strip()
-        if not url:
-            url = os.path.relpath(loop_path, report_root).replace(os.sep, "/")
-        if not loop_enabled and not str(live.get("url", "")).strip():
-            _warn_once("loop_json", "ecowittSeasons: [EcowittGateway] [[loop_json]] is not enabled; current conditions "
-                       "will show the last archive record instead of live data")
+        url, urls, loop_enabled = find_loop_json(gen.config_dict, skin_dict, live)
 
         # Unit conversions: for each unit system ecwLoop.json may be in, each group to the report's unit
         converter, formatter = gen.converter, gen.formatter
@@ -203,6 +244,7 @@ class EcowittSeasonsSearchList(SearchList):
 
         live_config = {
             "url": url,
+            "urls": urls,
             "enabled": loop_enabled or bool(str(live.get("url", "")).strip()),
             "poll": max(2, to_int(live.get("poll_interval", 10))),
             "stale": max(10, to_int(live.get("stale_after", 120))),

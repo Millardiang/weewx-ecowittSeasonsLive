@@ -277,18 +277,25 @@ function ecw_show(packet, live) {
     ecw_status();
 }
 
+// The places ecwLoop.json may be (the first is where the report found it); the one that answers is kept
+var ecw_urls = (ecw.urls && ecw.urls.length ? ecw.urls : [ecw.url]).filter(Boolean);
+var ecw_url_index = 0;
+
 function ecw_poll() {
     clearTimeout(ecw_timer);
-    if (!ecw.enabled || !ecw.url) return;
+    if (!ecw.enabled || !ecw_urls.length) return;
     var next = function() {
         // Slow down while ecwLoop.json can't be read
-        var wait = ecw.poll * 1000 * Math.min(6, 1 + ecw_failures);
+        var wait = ecw.poll * 1000 * Math.min(6, 1 + Math.floor(ecw_failures / ecw_urls.length));
         ecw_timer = setTimeout(function() { if (!document.hidden) ecw_poll(); }, wait);
     };
-    wx_json(ecw.url).then(function(packet) {
+    var url = ecw_urls[ecw_url_index];
+    wx_json(url).then(function(packet) {
+        if (!packet || typeof packet !== "object" || !packet.dateTime) throw new Error("not a loop packet");
         ecw_failures = 0;
+        ecw.url = url;
         // ecwLoop.json older than the archive record shown: keep the record
-        if (!ecw_is_live && ecw_packet && packet.dateTime && packet.dateTime < ecw_packet.dateTime) {
+        if (!ecw_is_live && ecw_packet && packet.dateTime < ecw_packet.dateTime) {
             ecw_status();
         } else {
             ecw_show(packet, true);
@@ -296,9 +303,12 @@ function ecw_poll() {
         next();
     }).catch(function(e) {
         ecw_failures++;
-        if (ecw_failures === 1) console.log("ecowittSeasons: cannot read " + ecw.url + ": " + e.message);
+        if (ecw_failures <= ecw_urls.length) console.log("ecowittSeasons: cannot read " + url + ": " + e.message);
+        // Try the next place at once, until each has been tried
+        ecw_url_index = (ecw_url_index + 1) % ecw_urls.length;
         ecw_status();
-        next();
+        if (ecw_failures < ecw_urls.length) ecw_poll();
+        else next();
     });
 }
 

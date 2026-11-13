@@ -59,10 +59,26 @@ To remove it: `weectl extension uninstall ecowittSeasons`.
 
 ## How the live data reaches the page
 
-weewx-ecowittGateway writes each loop packet to `ecwLoop.json` (by default in the top of your web pages folder).
-The skin works out where that is from `[EcowittGateway] [[loop_json]] path` and the report's `HTML_ROOT`, so the
-page fetches it with a relative URL (`../ecwLoop.json` for the default install). The file is in the unit system
-`[[loop_json]] units` says; the page converts each field to the report's units.
+weewx-ecowittGateway writes each loop packet to `ecwLoop.json` (by default in the top of your web pages folder,
+the `HTML_ROOT` of `[StdReport]`). At each report the skin looks for the file, in this order:
+
+1. where `[EcowittGateway] [[loop_json]] path` says it is written;
+2. this report's own folder (eg `/var/www/html/ecowittSeasons/ecwLoop.json`);
+3. the `[StdReport]` web pages folder;
+4. the folder above this report's.
+
+The first one that exists is used, and the log says which (`ecowittSeasons: live data from ...`). The pages fetch
+it with a relative URL, and if that fails they try the other places before giving up. The file is in the unit
+system `[[loop_json]] units` says; the page converts each field to the report's units.
+
+To set the place yourself, give its URL relative to the report's pages:
+
+```
+[StdReport]
+    [[ecowittSeasons]]
+        [[[LiveConditions]]]
+            url = ecwLoop.json        # same folder as index.html
+```
 
 The status line under *Current Conditions* says what is shown: **Live** with the age of the data, **No live data
 since …** when `ecwLoop.json` stops changing, or **Last archive record** when it can't be read (and before the

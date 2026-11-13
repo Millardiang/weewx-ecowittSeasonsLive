@@ -4,5 +4,7 @@
   last archive record as fallback.
 - Interactive charts from weewx-echarts 1.0.0 instead of the ImageGenerator plots; charts and lines
   with no data are left out.
+- ecwLoop.json is looked for on disk: where [EcowittGateway] [[loop_json]] puts it, then the report's own
+  folder, the [StdReport] web folder and the folder above; the pages try each place in turn if one fails.
 - No N/A anywhere: only values that are present are shown.
 - Teal/green colours of the WeeWX documentation, with a dark theme.
