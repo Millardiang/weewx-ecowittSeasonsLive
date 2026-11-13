@@ -1,0 +1,114 @@
+## The chart builder of weewx-echarts, in the weewx-ecowittSeasonsLive skin
+## weewx-echarts: from the Belchertown skin by Pat O'Brien and contributors (GPL-3.0)
+## Copyright (C) 2026 Ian Millard
+## Distributed under terms of GPLv3.  See LICENSE for your rights.
+#errorCatcher Echo
+#encoding UTF-8
+#set global $ecw_root = ".."
+#set global $ecw_charts = True
+<!DOCTYPE html>
+<html lang="$lang">
+  <head>
+    <meta charset="UTF-8" />
+    <title>$station.location $obs.label.chart_builder_page_header</title>
+    <meta name="robots" content="noindex" />
+    #include "head.inc"
+  </head>
+
+  <body>
+    #include "titlebar.inc"
+
+    <div id="contents">
+      <p><a href="../index.html">&#10096; $gettext("Current Conditions")</a></p>
+        <div class="widget chart-builder">
+            <div class="widget_title">$obs.label.chart_builder_page_header</div>
+
+                #if str($Extras.get("chart_builder_enabled", "1")) == "0"
+            <p class="cb-intro">$obs.label.chart_builder_off</p>
+            #else
+            <p class="cb-intro">$obs.label.chart_builder_intro</p>
+
+            <div class="cb-layout">
+                <form class="cb-form" onsubmit="return false">
+                    <fieldset>
+                        <legend>$obs.label.chart_builder_chart</legend>
+                        <label>$obs.label.chart_builder_title <input type="text" id="cb-title" value="$obs.label.chart_builder_default_title"></label>
+                        <label>$obs.label.chart_builder_kind
+                            <select id="cb-type">
+                                <option value="line">$obs.label.chart_builder_kind_line</option>
+                                <option value="smooth" selected>$obs.label.chart_builder_kind_smooth</option>
+                                <option value="area">$obs.label.chart_builder_kind_area</option>
+                                <option value="column">$obs.label.chart_builder_kind_column</option>
+                                <option value="dots">$obs.label.chart_builder_kind_dots</option>
+                            </select>
+                        </label>
+                        <label>$obs.label.chart_builder_time
+                            <select id="cb-time">
+                                <option value="today" data-span="day">$obs.label.chart_builder_time_today</option>
+                                <option value="86400" data-span="day" selected>$obs.label.chart_builder_time_24h</option>
+                                <option value="week" data-span="week">$obs.label.chart_builder_time_week</option>
+                                <option value="604800" data-span="week">$obs.label.chart_builder_time_7d</option>
+                                <option value="month" data-span="month">$obs.label.chart_builder_time_month</option>
+                                <option value="2592000" data-span="month">$obs.label.chart_builder_time_30d</option>
+                                <option value="year" data-span="year">$obs.label.chart_builder_time_year</option>
+                                <option value="31536000" data-span="year">$obs.label.chart_builder_time_365d</option>
+                            </select>
+                        </label>
+                        <label>$obs.label.chart_builder_detail
+                            <select id="cb-detail">
+                                <option value="">$obs.label.chart_builder_detail_all</option>
+                                <option value="avg hour">$obs.label.chart_builder_detail_avg_hour</option>
+                                <option value="max hour">$obs.label.chart_builder_detail_max_hour</option>
+                                <option value="min hour">$obs.label.chart_builder_detail_min_hour</option>
+                                <option value="sum hour">$obs.label.chart_builder_detail_sum_hour</option>
+                                <option value="avg day">$obs.label.chart_builder_detail_avg_day</option>
+                                <option value="max day">$obs.label.chart_builder_detail_max_day</option>
+                                <option value="min day">$obs.label.chart_builder_detail_min_day</option>
+                                <option value="sum day">$obs.label.chart_builder_detail_sum_day</option>
+                            </select>
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>$obs.label.chart_builder_lines</legend>
+                        <div id="cb-lines"></div>
+                        <button type="button" class="form_button" id="cb-add">$obs.label.chart_builder_add_line</button>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>$obs.label.chart_builder_where</legend>
+                        <label>$obs.label.chart_builder_where_page <select id="cb-group"></select></label>
+                        <div id="cb-new-group">
+                            <label>$obs.label.chart_builder_new_page_title <input type="text" id="cb-group-title" value="$obs.label.chart_builder_default_page_title"></label>
+                        </div>
+                    </fieldset>
+                </form>
+
+                <div class="cb-preview">
+                    <div id="cb-chart"></div>
+                    <p class="cb-note">$obs.label.chart_builder_preview_note</p>
+                </div>
+            </div>
+
+            <section class="cb-result">
+                <h2>$obs.label.chart_builder_result</h2>
+                <ol class="cb-steps">
+                    <li>$obs.label.chart_builder_step_copy</li>
+                    <li>$obs.label.chart_builder_step_open</li>
+                    <li id="cb-step-paste"></li>
+                    <li>$obs.label.chart_builder_step_wait</li>
+                </ol>
+                <textarea id="cb-output" readonly rows="20" spellcheck="false" wrap="off"></textarea>
+                <button type="button" class="form_button" id="cb-copy">$obs.label.chart_builder_copy</button>
+                <span id="cb-copied" class="cb-note"></span>
+            </section>
+            #end if
+
+        </div>
+
+    #if str($Extras.get("chart_builder_enabled", "1")) != "0"
+    <script src="../js/echarts-chart-builder.js?$current.dateTime.raw"></script>
+    #end if
+    </div>
+  </body>
+</html>

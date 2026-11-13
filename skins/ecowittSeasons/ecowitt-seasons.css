@@ -1,0 +1,561 @@
+/* CSS for the weewx-ecowittSeasonsLive skin
+ * Based on the weewx Seasons skin (seasons.css), Copyright (c) Tom Keffer, Matthew Wall,
+ * and the weewx-echarts skin (from the Belchertown skin by Pat O'Brien, GPL-3.0).
+ * Copyright (C) 2026 Ian Millard (weewx-ecowittSeasonsLive).
+ * Distributed under terms of GPLv3.  See LICENSE for your rights.
+ *
+ * The colours are the teal greens of the WeeWX documentation (weewx.com/docs): the Material
+ * "teal" header, teal headings, #aacccc and #ddefef panels and #ecf3f3 shading.
+ */
+
+:root {
+    --background-color: #ffffff;
+    --text-color: #1d2b29;
+    --muted-color: #6b7f7c;
+    --title-bar-color: #009688;          /* the documentation's header bar */
+    --title-bar-text-color: #ffffff;
+    --title-background-color: #aacccc;   /* the documentation's h1 panel */
+    --element-background-color: #ddefef; /* the documentation's table headings */
+    --shade-color: #ecf3f3;              /* the documentation's code shading */
+    --section-border-color: #8fbdb7;
+    --cell-border-color: #d6e6e4;
+    --heading-color: #008080;            /* teal, as the documentation's headings */
+    --highlight-color: #009688;
+    --link-color: #00796b;
+    --visited-color: #00796b;
+    --hover-color: #004d40;
+    --timestamp-color: #8aa3a0;
+    --hival-color: #b23b3b;
+    --loval-color: #3b5bb2;
+    --ok-color: #2e7d32;
+    --low-color: #c62828;
+    --unknown-color: #b0c4c1;
+    --note-color: #ddf0e0;               /* the documentation's notes */
+    --chart-background-color: #ffffff;
+    --chart-text-color: #5f7471;
+    --chart-title-color: #007a73;
+    --chart-grid-color: #d6e6e4;
+    --chart-axis-color: #7d9693;
+    color-scheme: light;
+}
+
+html.dark {
+    --background-color: #121b1a;
+    --text-color: #dcebe8;
+    --muted-color: #8fa8a4;
+    --title-bar-color: #00564d;
+    --title-bar-text-color: #e6f4f1;
+    --title-background-color: #1f3a37;
+    --element-background-color: #183230;
+    --shade-color: #172624;
+    --section-border-color: #3f5a56;
+    --cell-border-color: #2a3e3b;
+    --heading-color: #6fcfc3;
+    --highlight-color: #26a69a;
+    --link-color: #4db6ac;
+    --visited-color: #4db6ac;
+    --hover-color: #80cbc4;
+    --timestamp-color: #6f8986;
+    --hival-color: #ef8a80;
+    --loval-color: #8fa8f0;
+    --ok-color: #81c784;
+    --low-color: #ef6c6c;
+    --unknown-color: #4f6663;
+    --note-color: #1d3a2a;
+    --chart-background-color: #16211f;
+    --chart-text-color: #9fb5b1;
+    --chart-title-color: #7fd3c7;
+    --chart-grid-color: #2c3f3c;
+    --chart-axis-color: #5f7a76;
+    color-scheme: dark;
+}
+
+/* use the local fonts */
+@font-face {
+    font-family: 'Open Sans';
+    src: url('font/OpenSans.woff2') format('woff2'),
+        url('font/OpenSans.woff') format('woff');
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: 'Open Sans', arial, sans-serif;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+    color: var(--link-color);
+}
+a:link { color: var(--link-color); }
+a:visited { color: var(--visited-color); }
+a:hover { color: var(--hover-color); }
+
+#widget_group {
+    float: left;
+    margin-right: 40px;
+    max-width: 420px;
+}
+
+#plot_group {
+    overflow: hidden;
+}
+
+/* Title bar: the documentation's teal header */
+
+#title_bar {
+    overflow: auto;
+    margin-bottom: 5px;
+    color: var(--title-bar-text-color);
+    background-color: var(--title-bar-color);
+    border-bottom: 3px solid var(--title-background-color);
+}
+
+#title_bar a,
+#title_bar a:visited {
+    color: var(--title-bar-text-color);
+}
+
+#contents {
+    clear: both;
+    margin: 20px;
+}
+
+#title {
+    float: left;
+    margin-left: 10px;
+}
+
+#tools {
+    float: right;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 14px 20px 8px 10px;
+}
+
+#rss_link {
+    padding: 2px 8px;
+    font-size: 90%;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 5px;
+}
+
+#reports {
+    float: right;
+    margin-top: 5px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    text-align: right;
+    font-size: 90%;
+}
+
+#reports select {
+    font: inherit;
+    font-size: 90%;
+    color: var(--text-color);
+    background: var(--background-color);
+    border: 1px solid var(--section-border-color);
+    border-radius: 3px;
+}
+
+.tool_button,
+.form_button {
+    min-width: 34px;
+    height: 26px;
+    padding: 0 8px;
+    font: inherit;
+    font-size: 90%;
+    color: var(--title-bar-text-color);
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.form_button {
+    color: var(--link-color);
+    background-color: var(--background-color);
+    border-color: var(--section-border-color);
+}
+
+.tool_button:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.tool_button svg {
+    width: 15px;
+    height: 15px;
+    vertical-align: middle;
+    fill: currentColor;
+}
+
+html.dark .wx-icon-moon,
+html:not(.dark) .wx-icon-sun {
+    display: none;
+}
+
+.footnote {
+    font-size: 80%;
+    font-style: italic;
+    clear: both;
+    padding-left: 20px;
+    color: var(--muted-color);
+}
+
+.page_title {
+    font-size: 140%;
+    line-height: 50%;
+}
+
+.lastupdate {
+    font-size: 80%;
+    line-height: 50%;
+    opacity: 0.9;
+}
+
+/* Widgets */
+
+.widget {
+    margin-bottom: 30px;
+    clear: both;
+}
+
+.widget_title {
+    font-weight: bold;
+    color: var(--heading-color);
+    padding: 2px 10px 2px 10px;
+    border-bottom: 2px solid var(--section-border-color);
+}
+
+.widget_title a,
+.widget_title a:visited {
+    color: var(--heading-color);
+}
+
+.label {
+    font-size: 80%;
+    vertical-align: top;
+    text-align: right;
+    padding-top: 4px;
+    padding-right: 5px;
+}
+
+.data {
+    font-weight: bold;
+    font-size: 80%;
+    vertical-align: top;
+    text-align: left;
+    padding-top: 4px;
+}
+
+.units {
+    font-size: 80%;
+    vertical-align: top;
+    padding-top: 4px;
+}
+
+.timestamp {
+    font-size: 80%;
+    font-weight: normal;
+    color: var(--timestamp-color);
+}
+
+.hival { color: var(--hival-color); }
+.loval { color: var(--loval-color); }
+.status_ok { color: var(--ok-color); }
+.status_low { color: var(--low-color); }
+.status_unknown { color: var(--unknown-color); }
+
+.button,
+.button_selected {
+    display: inline-block;
+    cursor: pointer;
+    padding: 0 10px;
+    line-height: 1.6;
+}
+
+.button_selected {
+    border-bottom: 5px solid var(--highlight-color);
+    color: var(--text-color) !important;
+}
+
+.widget_control {
+    float: right;
+    cursor: pointer;
+    margin-left: 20px;
+    margin-right: 5px;
+    font-weight: normal;
+    font-size: 90%;
+}
+
+.widget img {
+    width: 350px;
+    border: 1px solid var(--section-border-color);
+    margin-top: 4px;
+}
+
+.new_row {
+    border-top: 1px solid var(--cell-border-color);
+}
+
+.celestial_body {
+    margin-bottom: 30px;
+    float: left;
+}
+
+.widget table th {
+    font-weight: normal;
+    text-align: right;
+    border-bottom: 1px solid var(--cell-border-color);
+}
+
+#hilo_widget table th,
+#totals_widget table th {
+    font-size: 80%;
+    text-align: right;
+    border-bottom: none;
+}
+
+#hilo_widget .data,
+#totals_widget .data {
+    font-weight: bold;
+    font-size: 80%;
+    text-align: right;
+    padding-left: 10px;
+}
+
+#sensors_widget table th {
+    padding-top: 10px;
+}
+
+/* Live current conditions */
+
+.ecw_status {
+    margin: 4px 0 2px 10px;
+    font-size: 75%;
+    color: var(--muted-color);
+}
+
+.ecw_status:empty {
+    display: none;
+}
+
+.ecw_dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 6px;
+    border-radius: 50%;
+    background-color: var(--unknown-color);
+    vertical-align: 1px;
+}
+
+.ecw_fresh .ecw_dot {
+    background-color: var(--highlight-color);
+    box-shadow: 0 0 0 3px rgba(0, 150, 136, 0.2);
+}
+
+.ecw_stale .ecw_dot {
+    background-color: #c98a00;
+}
+
+#current_widget table {
+    width: 100%;
+}
+
+#current_widget .label {
+    width: 55%;
+}
+
+#current_widget tr.ecw_section th,
+#sensors_widget .ecw_sensors th {
+    padding: 10px 4px 2px 4px;
+    font-size: 80%;
+    font-weight: bold;
+    text-align: left;
+    color: var(--heading-color);
+    border-bottom: 1px solid var(--cell-border-color);
+}
+
+.ecw_none {
+    font-size: 80%;
+    color: var(--muted-color);
+    padding: 6px 10px;
+}
+
+.ecw_sensors {
+    width: 100%;
+}
+
+.ecw_sensors .label {
+    text-align: left;
+}
+
+.ecw_lost td {
+    opacity: 0.55;
+}
+
+.ecw_signal {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 12px;
+}
+
+.ecw_bar {
+    width: 4px;
+    border-radius: 1px;
+    background-color: var(--cell-border-color);
+}
+
+.ecw_bar.on { background-color: var(--highlight-color); }
+.ecw_bar1 { height: 4px; }
+.ecw_bar2 { height: 7px; }
+.ecw_bar3 { height: 10px; }
+.ecw_bar4 { height: 12px; }
+
+/* History charts (weewx-echarts) */
+
+#history_widget .widget_title {
+    min-width: 300px;
+}
+
+.plot_container {
+    margin-top: 4px;
+}
+
+.wx-chart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 16px;
+}
+
+.wx-chart {
+    height: 300px;
+    margin-top: 10px;
+    background-color: var(--chart-background-color);
+    border: 1px solid var(--cell-border-color);
+    border-radius: 3px;
+}
+
+.wx-empty {
+    color: var(--muted-color);
+    margin: 30px 10px;
+}
+
+#map_canvas {
+    width: 350px;
+    height: 350px;
+    margin-top: 4px;
+}
+
+@media (max-width: 800px) {
+    #plot_group { overflow: visible; float: left; width: 100%; }
+    #widget_group { float: none; margin-right: 0; max-width: none; }
+    .wx-chart-grid { grid-template-columns: minmax(0, 1fr); }
+    #tools { float: left; clear: left; margin: 0 10px 10px 10px; }
+}
+@media (min-width: 801px) {
+    #plot_group { overflow: hidden; float: none; }
+}
+
+/* Chart builder (weewx-echarts) */
+
+.chart-builder fieldset {
+    border: 1px solid var(--section-border-color);
+    padding: 10px 14px;
+}
+
+.chart-builder .cb-intro {
+    margin: 12px 10px;
+}
+
+.chart-builder h2 {
+    font-size: 100%;
+    font-weight: bold;
+    color: var(--heading-color);
+    padding: 2px 10px;
+    border-bottom: 2px solid var(--section-border-color);
+}
+
+.cb-layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 2fr) 3fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.cb-form fieldset { margin-bottom: 20px; }
+.cb-form legend { font-weight: bold; color: var(--heading-color); padding: 0 4px; }
+
+.cb-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.cb-form input[type="text"],
+.cb-form select,
+#cb-output {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 6px 8px;
+    font: inherit;
+    font-size: 90%;
+    color: inherit;
+    background: var(--background-color);
+    border: 1px solid var(--cell-border-color);
+    border-radius: 4px;
+}
+
+.cb-line {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: end;
+    gap: 8px 16px;
+    padding: 12px 0;
+}
+
+.cb-line + .cb-line { border-top: 1px solid var(--cell-border-color); }
+.cb-line .cb-obs,
+.cb-line label:first-of-type { grid-column: 1 / -1; }
+.cb-line label { margin-bottom: 0; }
+.cb-form .cb-check { flex-direction: row; align-items: center; align-self: center; }
+
+.cb-line input[type="color"] {
+    cursor: pointer;
+    width: 60px;
+    height: 34px;
+    padding: 2px;
+    background: var(--background-color);
+    border: 1px solid var(--cell-border-color);
+}
+
+.cb-remove {
+    align-self: center;
+    padding: 2px 10px;
+    font-size: 110%;
+    color: inherit;
+    background: none;
+    border: 1px solid var(--cell-border-color);
+    border-radius: 4px;
+}
+
+.cb-preview { position: sticky; top: 20px; }
+#cb-chart { min-height: 400px; }
+.cb-note { font-size: 85%; color: var(--muted-color); }
+.cb-result { margin-top: 30px; }
+.cb-steps li { margin-bottom: 6px; }
+#cb-output { font-family: monospace; margin: 10px 0; }
+#cb-copied { margin-left: 12px; }
+
+@media only screen and (max-width: 991px) {
+    .cb-layout { grid-template-columns: 1fr; }
+    .cb-preview { position: static; order: -1; }
+}

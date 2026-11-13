@@ -1,0 +1,1024 @@
+###############################################################################
+# charts.conf: the charts of the weewx-ecowittSeasonsLive skin
+# Copyright (C) 2026 Ian Millard. Based on charts.conf.example of weewx-echarts (GPL-3.0).
+#
+# Copy this file to charts.conf in the same folder and edit the copy; charts.conf.example is replaced on
+# upgrades. After a change, the charts update at the next report; there's no need to restart weewx.
+# The full list of options, with examples, is in CHARTS.md in this folder (from weewx-echarts).
+#
+# The history widget of the front page shows the [day], [week], [month] and [year] groups, and the
+# telemetry page the [telemetry_day] ... [telemetry_year] groups. Other groups are drawn by the chart
+# builder only.
+#
+# Lines whose observation has had no data for [Extras] hide_empty_days (30) days are left out, and
+# then charts with no lines, so the lists below can name every sensor an Ecowitt gateway may have.
+# A chart with no data for its own time span is not drawn either.
+#
+# Layout:
+#   [group]                     A period of charts: [day], [week], ...
+#       [[chart]]               One chart; charts are drawn in the order they appear here
+#           [[[observation]]]   One line on the chart: any observation in your database (outTemp, rain, ...),
+#                               or a special one (windRose, aqiChart, haysChart, weatherRange, rainTotal)
+#
+# An option set on a group applies to all its charts, and one set on a chart to all its lines, unless they set
+# their own. Options before the first group apply to everything.
+#
+# Group:   title, time_length (seconds, or today, week, month, year, all, ...), aggregate_type (avg, max, min,
+#          sum, ...), aggregate_interval (seconds), gap_size (seconds: a longer gap breaks the line; at least
+#          your archive_interval)
+# Chart:   title, type (line, smooth, area, column, dots, gauge), legend, colors, height, axis_min, axis_max
+# Line:    name, color, observation, line_width, markers, marker_size, aggregate_type, aggregate_interval
+###############################################################################
+
+# Defaults for every chart
+aggregate_type = None
+type = line
+# Line colours, in order: teal first, like the rest of the skin. Checked for colour-blind separation.
+colors = "#00897b, #c0504d, #5c6bc0, #c98a00, #8e24aa, #5f8a00, #0091a8, #b0507a"
+tooltip_date_format = "LLL"
+legend = true
+
+[day]
+    title = "Last 25 hours"
+    show_button = true
+    button_text = "Day"
+    time_length = 90000
+    tooltip_date_format = "LLL"
+    gap_size = 900
+
+    [[temperature]]
+        title = Temperature
+        [[[outTemp]]]
+        [[[dewpoint]]]
+
+    [[feels]]
+        title = Feels Like
+        [[[appTemp]]]
+        [[[feelslike]]]
+        [[[windchill]]]
+        [[[heatindex]]]
+
+    [[humidity]]
+        title = Humidity
+        axis_max = 100
+        [[[outHumidity]]]
+
+    [[barometer]]
+        title = Barometer
+        type = smooth
+        [[[barometer]]]
+
+    [[wind]]
+        title = Wind Speed
+        axis_min = 0
+        [[[windGust]]]
+        [[[windSpeed]]]
+
+    [[winddir]]
+        title = Wind Direction
+        [[[windDir]]]
+            line_width = 0
+            markers = true
+            marker_size = 3
+            axis_min = 0
+            axis_max = 360
+
+    [[rain]]
+        title = Rain
+        type = column
+        [[[rain]]]
+            aggregate_type = sum
+            aggregate_interval = 3600
+        [[[t_rain]]]
+            aggregate_type = sum
+            aggregate_interval = 3600
+        [[[p_rain]]]
+            aggregate_type = sum
+            aggregate_interval = 3600
+
+    [[rainrate]]
+        title = Rain Rate
+        axis_min = 0
+        [[[rainRate]]]
+        [[[t_rainrate]]]
+        [[[p_rainrate]]]
+
+    [[uv]]
+        title = UV Index
+        axis_min = 0
+        [[[UV]]]
+
+    [[radiation]]
+        title = Solar Radiation
+        axis_min = 0
+        [[[radiation]]]
+        [[[maxSolarRad]]]
+
+    [[illuminance]]
+        title = Illuminance
+        axis_min = 0
+        [[[illuminance]]]
+
+    [[lightning]]
+        title = Lightning Strikes
+        type = column
+        [[[lightning_strike_count]]]
+            aggregate_type = sum
+            aggregate_interval = 3600
+
+    [[lightningdist]]
+        title = Lightning Distance
+        [[[lightning_distance]]]
+            line_width = 0
+            markers = true
+
+    [[indoortemp]]
+        title = Inside Temperature
+        [[[inTemp]]]
+
+    [[indoorhum]]
+        title = Inside Humidity
+        [[[inHumidity]]]
+
+    [[channeltemp]]
+        title = Channel Temperatures
+        [[[extraTemp1]]]
+        [[[extraTemp2]]]
+        [[[extraTemp3]]]
+        [[[extraTemp4]]]
+        [[[extraTemp5]]]
+        [[[extraTemp6]]]
+        [[[extraTemp7]]]
+        [[[extraTemp8]]]
+
+    [[channelhum]]
+        title = Channel Humidity
+        [[[extraHumid1]]]
+        [[[extraHumid2]]]
+        [[[extraHumid3]]]
+        [[[extraHumid4]]]
+        [[[extraHumid5]]]
+        [[[extraHumid6]]]
+        [[[extraHumid7]]]
+        [[[extraHumid8]]]
+
+    [[probetemp]]
+        title = Probe Temperatures
+        [[[extraTemp9]]]
+        [[[extraTemp10]]]
+        [[[extraTemp11]]]
+        [[[extraTemp12]]]
+        [[[extraTemp13]]]
+        [[[extraTemp14]]]
+        [[[extraTemp15]]]
+        [[[extraTemp16]]]
+
+    [[soilmoist]]
+        title = Soil Moisture
+        [[[soilMoist1]]]
+        [[[soilMoist2]]]
+        [[[soilMoist3]]]
+        [[[soilMoist4]]]
+        [[[soilMoist5]]]
+        [[[soilMoist6]]]
+        [[[soilMoist7]]]
+        [[[soilMoist8]]]
+        [[[soilMoist9]]]
+        [[[soilMoist10]]]
+        [[[soilMoist11]]]
+        [[[soilMoist12]]]
+        [[[soilMoist13]]]
+        [[[soilMoist14]]]
+        [[[soilMoist15]]]
+        [[[soilMoist16]]]
+
+    [[soiltemp]]
+        title = Soil Temperature
+        [[[soilTemp1]]]
+        [[[soilTemp2]]]
+        [[[soilTemp3]]]
+        [[[soilTemp4]]]
+
+    [[leafwet]]
+        title = Leaf Wetness
+        [[[leafWet1]]]
+        [[[leafWet2]]]
+        [[[leafWet3]]]
+        [[[leafWet4]]]
+        [[[leafWet5]]]
+        [[[leafWet6]]]
+        [[[leafWet7]]]
+        [[[leafWet8]]]
+
+    [[pm]]
+        title = Particulates
+        axis_min = 0
+        [[[pm1_0]]]
+        [[[pm2_5]]]
+        [[[pm4_0]]]
+        [[[pm10_0]]]
+
+    [[co2]]
+        title = CO₂
+        [[[co2]]]
+
+    [[aqi]]
+        title = Air Quality
+        [[[aqiChart]]]
+
+
+[week]
+    title = "Last 7 days"
+    show_button = true
+    button_text = "Week"
+    time_length = 604800
+    tooltip_date_format = "LLLL"
+    gap_size = 7200
+    aggregate_type = avg
+    aggregate_interval = 3600
+
+    [[temperature]]
+        title = Temperature
+        [[[outTemp]]]
+        [[[dewpoint]]]
+
+    [[feels]]
+        title = Feels Like
+        [[[appTemp]]]
+        [[[feelslike]]]
+        [[[windchill]]]
+        [[[heatindex]]]
+
+    [[humidity]]
+        title = Humidity
+        axis_max = 100
+        [[[outHumidity]]]
+
+    [[barometer]]
+        title = Barometer
+        type = smooth
+        [[[barometer]]]
+
+    [[wind]]
+        title = Wind Speed
+        axis_min = 0
+        [[[windGust]]]
+            aggregate_type = max
+        [[[windSpeed]]]
+
+    [[winddir]]
+        title = Wind Direction
+        [[[windDir]]]
+            line_width = 0
+            markers = true
+            marker_size = 3
+            axis_min = 0
+            axis_max = 360
+            aggregate_type = vecdir
+
+    [[windrose]]
+        title = Wind Rose
+        [[[windRose]]]
+
+    [[rain]]
+        title = Rain
+        type = column
+        [[[rain]]]
+            aggregate_type = sum
+            aggregate_interval = 86400
+        [[[t_rain]]]
+            aggregate_type = sum
+            aggregate_interval = 86400
+        [[[p_rain]]]
+            aggregate_type = sum
+            aggregate_interval = 86400
+
+    [[rainrate]]
+        title = Rain Rate
+        axis_min = 0
+        [[[rainRate]]]
+            aggregate_type = max
+        [[[t_rainrate]]]
+            aggregate_type = max
+        [[[p_rainrate]]]
+            aggregate_type = max
+
+    [[uv]]
+        title = UV Index
+        axis_min = 0
+        [[[UV]]]
+            aggregate_type = max
+
+    [[radiation]]
+        title = Solar Radiation
+        axis_min = 0
+        [[[radiation]]]
+            aggregate_type = max
+        [[[maxSolarRad]]]
+            aggregate_type = max
+
+    [[illuminance]]
+        title = Illuminance
+        axis_min = 0
+        [[[illuminance]]]
+            aggregate_type = max
+
+    [[lightning]]
+        title = Lightning Strikes
+        type = column
+        [[[lightning_strike_count]]]
+            aggregate_type = sum
+            aggregate_interval = 3600
+
+    [[lightningdist]]
+        title = Lightning Distance
+        [[[lightning_distance]]]
+            line_width = 0
+            markers = true
+            aggregate_type = min
+
+    [[indoortemp]]
+        title = Inside Temperature
+        [[[inTemp]]]
+
+    [[indoorhum]]
+        title = Inside Humidity
+        [[[inHumidity]]]
+
+    [[channeltemp]]
+        title = Channel Temperatures
+        [[[extraTemp1]]]
+        [[[extraTemp2]]]
+        [[[extraTemp3]]]
+        [[[extraTemp4]]]
+        [[[extraTemp5]]]
+        [[[extraTemp6]]]
+        [[[extraTemp7]]]
+        [[[extraTemp8]]]
+
+    [[channelhum]]
+        title = Channel Humidity
+        [[[extraHumid1]]]
+        [[[extraHumid2]]]
+        [[[extraHumid3]]]
+        [[[extraHumid4]]]
+        [[[extraHumid5]]]
+        [[[extraHumid6]]]
+        [[[extraHumid7]]]
+        [[[extraHumid8]]]
+
+    [[probetemp]]
+        title = Probe Temperatures
+        [[[extraTemp9]]]
+        [[[extraTemp10]]]
+        [[[extraTemp11]]]
+        [[[extraTemp12]]]
+        [[[extraTemp13]]]
+        [[[extraTemp14]]]
+        [[[extraTemp15]]]
+        [[[extraTemp16]]]
+
+    [[soilmoist]]
+        title = Soil Moisture
+        [[[soilMoist1]]]
+        [[[soilMoist2]]]
+        [[[soilMoist3]]]
+        [[[soilMoist4]]]
+        [[[soilMoist5]]]
+        [[[soilMoist6]]]
+        [[[soilMoist7]]]
+        [[[soilMoist8]]]
+        [[[soilMoist9]]]
+        [[[soilMoist10]]]
+        [[[soilMoist11]]]
+        [[[soilMoist12]]]
+        [[[soilMoist13]]]
+        [[[soilMoist14]]]
+        [[[soilMoist15]]]
+        [[[soilMoist16]]]
+
+    [[soiltemp]]
+        title = Soil Temperature
+        [[[soilTemp1]]]
+        [[[soilTemp2]]]
+        [[[soilTemp3]]]
+        [[[soilTemp4]]]
+
+    [[leafwet]]
+        title = Leaf Wetness
+        [[[leafWet1]]]
+        [[[leafWet2]]]
+        [[[leafWet3]]]
+        [[[leafWet4]]]
+        [[[leafWet5]]]
+        [[[leafWet6]]]
+        [[[leafWet7]]]
+        [[[leafWet8]]]
+
+    [[pm]]
+        title = Particulates
+        axis_min = 0
+        [[[pm1_0]]]
+        [[[pm2_5]]]
+        [[[pm4_0]]]
+        [[[pm10_0]]]
+
+    [[co2]]
+        title = CO₂
+        [[[co2]]]
+
+
+[month]
+    title = "Last 30 days"
+    show_button = true
+    button_text = "Month"
+    time_length = 2592000
+    tooltip_date_format = "LLLL"
+    gap_size = 21600
+    aggregate_type = avg
+    aggregate_interval = 10800
+
+    [[temperature]]
+        title = Temperature
+        [[[outTemp]]]
+        [[[dewpoint]]]
+
+    [[feels]]
+        title = Feels Like
+        [[[appTemp]]]
+        [[[feelslike]]]
+        [[[windchill]]]
+        [[[heatindex]]]
+
+    [[humidity]]
+        title = Humidity
+        axis_max = 100
+        [[[outHumidity]]]
+
+    [[barometer]]
+        title = Barometer
+        type = smooth
+        [[[barometer]]]
+
+    [[wind]]
+        title = Wind Speed
+        axis_min = 0
+        [[[windGust]]]
+            aggregate_type = max
+        [[[windSpeed]]]
+
+    [[winddir]]
+        title = Wind Direction
+        [[[windDir]]]
+            line_width = 0
+            markers = true
+            marker_size = 3
+            axis_min = 0
+            axis_max = 360
+            aggregate_type = vecdir
+
+    [[windrose]]
+        title = Wind Rose
+        [[[windRose]]]
+
+    [[rain]]
+        title = Rain
+        type = column
+        [[[rain]]]
+            aggregate_type = sum
+            aggregate_interval = 86400
+        [[[t_rain]]]
+            aggregate_type = sum
+            aggregate_interval = 86400
+        [[[p_rain]]]
+            aggregate_type = sum
+            aggregate_interval = 86400
+
+    [[rainrate]]
+        title = Rain Rate
+        axis_min = 0
+        [[[rainRate]]]
+            aggregate_type = max
+        [[[t_rainrate]]]
+            aggregate_type = max
+        [[[p_rainrate]]]
+            aggregate_type = max
+
+    [[uv]]
+        title = UV Index
+        axis_min = 0
+        [[[UV]]]
+            aggregate_type = max
+
+    [[radiation]]
+        title = Solar Radiation
+        axis_min = 0
+        [[[radiation]]]
+            aggregate_type = max
+        [[[maxSolarRad]]]
+            aggregate_type = max
+
+    [[illuminance]]
+        title = Illuminance
+        axis_min = 0
+        [[[illuminance]]]
+            aggregate_type = max
+
+    [[lightning]]
+        title = Lightning Strikes
+        type = column
+        [[[lightning_strike_count]]]
+            aggregate_type = sum
+            aggregate_interval = 86400
+
+    [[lightningdist]]
+        title = Lightning Distance
+        [[[lightning_distance]]]
+            line_width = 0
+            markers = true
+            aggregate_type = min
+
+    [[indoortemp]]
+        title = Inside Temperature
+        [[[inTemp]]]
+
+    [[indoorhum]]
+        title = Inside Humidity
+        [[[inHumidity]]]
+
+    [[channeltemp]]
+        title = Channel Temperatures
+        [[[extraTemp1]]]
+        [[[extraTemp2]]]
+        [[[extraTemp3]]]
+        [[[extraTemp4]]]
+        [[[extraTemp5]]]
+        [[[extraTemp6]]]
+        [[[extraTemp7]]]
+        [[[extraTemp8]]]
+
+    [[channelhum]]
+        title = Channel Humidity
+        [[[extraHumid1]]]
+        [[[extraHumid2]]]
+        [[[extraHumid3]]]
+        [[[extraHumid4]]]
+        [[[extraHumid5]]]
+        [[[extraHumid6]]]
+        [[[extraHumid7]]]
+        [[[extraHumid8]]]
+
+    [[probetemp]]
+        title = Probe Temperatures
+        [[[extraTemp9]]]
+        [[[extraTemp10]]]
+        [[[extraTemp11]]]
+        [[[extraTemp12]]]
+        [[[extraTemp13]]]
+        [[[extraTemp14]]]
+        [[[extraTemp15]]]
+        [[[extraTemp16]]]
+
+    [[soilmoist]]
+        title = Soil Moisture
+        [[[soilMoist1]]]
+        [[[soilMoist2]]]
+        [[[soilMoist3]]]
+        [[[soilMoist4]]]
+        [[[soilMoist5]]]
+        [[[soilMoist6]]]
+        [[[soilMoist7]]]
+        [[[soilMoist8]]]
+        [[[soilMoist9]]]
+        [[[soilMoist10]]]
+        [[[soilMoist11]]]
+        [[[soilMoist12]]]
+        [[[soilMoist13]]]
+        [[[soilMoist14]]]
+        [[[soilMoist15]]]
+        [[[soilMoist16]]]
+
+    [[soiltemp]]
+        title = Soil Temperature
+        [[[soilTemp1]]]
+        [[[soilTemp2]]]
+        [[[soilTemp3]]]
+        [[[soilTemp4]]]
+
+    [[leafwet]]
+        title = Leaf Wetness
+        [[[leafWet1]]]
+        [[[leafWet2]]]
+        [[[leafWet3]]]
+        [[[leafWet4]]]
+        [[[leafWet5]]]
+        [[[leafWet6]]]
+        [[[leafWet7]]]
+        [[[leafWet8]]]
+
+    [[pm]]
+        title = Particulates
+        axis_min = 0
+        [[[pm1_0]]]
+        [[[pm2_5]]]
+        [[[pm4_0]]]
+        [[[pm10_0]]]
+
+    [[co2]]
+        title = CO₂
+        [[[co2]]]
+
+
+[year]
+    title = "Last 365 days"
+    show_button = true
+    button_text = "Year"
+    time_length = 31536000
+    tooltip_date_format = "LL"
+    gap_size = 172800
+    aggregate_type = avg
+    aggregate_interval = 86400
+
+    [[temperature]]
+        title = Temperature
+        [[[outTemp]]]
+        [[[dewpoint]]]
+
+    [[feels]]
+        title = Feels Like
+        [[[appTemp]]]
+        [[[feelslike]]]
+        [[[windchill]]]
+        [[[heatindex]]]
+
+    [[humidity]]
+        title = Humidity
+        axis_max = 100
+        [[[outHumidity]]]
+
+    [[barometer]]
+        title = Barometer
+        type = smooth
+        [[[barometer]]]
+
+    [[wind]]
+        title = Wind Speed
+        axis_min = 0
+        [[[windGust]]]
+            aggregate_type = max
+        [[[windSpeed]]]
+
+    [[winddir]]
+        title = Wind Direction
+        [[[windDir]]]
+            line_width = 0
+            markers = true
+            marker_size = 3
+            axis_min = 0
+            axis_max = 360
+            aggregate_type = vecdir
+
+    [[windrose]]
+        title = Wind Rose
+        [[[windRose]]]
+
+    [[rain]]
+        title = Rain
+        type = column
+        [[[rain]]]
+            aggregate_type = sum
+            aggregate_interval = 604800
+        [[[t_rain]]]
+            aggregate_type = sum
+            aggregate_interval = 604800
+        [[[p_rain]]]
+            aggregate_type = sum
+            aggregate_interval = 604800
+
+    [[rainrate]]
+        title = Rain Rate
+        axis_min = 0
+        [[[rainRate]]]
+            aggregate_type = max
+        [[[t_rainrate]]]
+            aggregate_type = max
+        [[[p_rainrate]]]
+            aggregate_type = max
+
+    [[uv]]
+        title = UV Index
+        axis_min = 0
+        [[[UV]]]
+            aggregate_type = max
+
+    [[radiation]]
+        title = Solar Radiation
+        axis_min = 0
+        [[[radiation]]]
+            aggregate_type = max
+        [[[maxSolarRad]]]
+            aggregate_type = max
+
+    [[illuminance]]
+        title = Illuminance
+        axis_min = 0
+        [[[illuminance]]]
+            aggregate_type = max
+
+    [[lightning]]
+        title = Lightning Strikes
+        type = column
+        [[[lightning_strike_count]]]
+            aggregate_type = sum
+            aggregate_interval = 86400
+
+    [[lightningdist]]
+        title = Lightning Distance
+        [[[lightning_distance]]]
+            line_width = 0
+            markers = true
+            aggregate_type = min
+
+    [[indoortemp]]
+        title = Inside Temperature
+        [[[inTemp]]]
+
+    [[indoorhum]]
+        title = Inside Humidity
+        [[[inHumidity]]]
+
+    [[channeltemp]]
+        title = Channel Temperatures
+        [[[extraTemp1]]]
+        [[[extraTemp2]]]
+        [[[extraTemp3]]]
+        [[[extraTemp4]]]
+        [[[extraTemp5]]]
+        [[[extraTemp6]]]
+        [[[extraTemp7]]]
+        [[[extraTemp8]]]
+
+    [[channelhum]]
+        title = Channel Humidity
+        [[[extraHumid1]]]
+        [[[extraHumid2]]]
+        [[[extraHumid3]]]
+        [[[extraHumid4]]]
+        [[[extraHumid5]]]
+        [[[extraHumid6]]]
+        [[[extraHumid7]]]
+        [[[extraHumid8]]]
+
+    [[probetemp]]
+        title = Probe Temperatures
+        [[[extraTemp9]]]
+        [[[extraTemp10]]]
+        [[[extraTemp11]]]
+        [[[extraTemp12]]]
+        [[[extraTemp13]]]
+        [[[extraTemp14]]]
+        [[[extraTemp15]]]
+        [[[extraTemp16]]]
+
+    [[soilmoist]]
+        title = Soil Moisture
+        [[[soilMoist1]]]
+        [[[soilMoist2]]]
+        [[[soilMoist3]]]
+        [[[soilMoist4]]]
+        [[[soilMoist5]]]
+        [[[soilMoist6]]]
+        [[[soilMoist7]]]
+        [[[soilMoist8]]]
+        [[[soilMoist9]]]
+        [[[soilMoist10]]]
+        [[[soilMoist11]]]
+        [[[soilMoist12]]]
+        [[[soilMoist13]]]
+        [[[soilMoist14]]]
+        [[[soilMoist15]]]
+        [[[soilMoist16]]]
+
+    [[soiltemp]]
+        title = Soil Temperature
+        [[[soilTemp1]]]
+        [[[soilTemp2]]]
+        [[[soilTemp3]]]
+        [[[soilTemp4]]]
+
+    [[leafwet]]
+        title = Leaf Wetness
+        [[[leafWet1]]]
+        [[[leafWet2]]]
+        [[[leafWet3]]]
+        [[[leafWet4]]]
+        [[[leafWet5]]]
+        [[[leafWet6]]]
+        [[[leafWet7]]]
+        [[[leafWet8]]]
+
+    [[pm]]
+        title = Particulates
+        axis_min = 0
+        [[[pm1_0]]]
+        [[[pm2_5]]]
+        [[[pm4_0]]]
+        [[[pm10_0]]]
+
+    [[co2]]
+        title = CO₂
+        [[[co2]]]
+
+
+[telemetry_day]
+    title = "Telemetry: Last 25 hours"
+    show_button = false
+    time_length = 90000
+    tooltip_date_format = "LLL"
+    gap_size = 900
+
+    [[rx]]
+        title = Signal
+        axis_min = 0
+        [[[rxCheckPercent]]]
+        [[[signal1]]]
+        [[[signal2]]]
+        [[[signal3]]]
+        [[[signal4]]]
+        [[[signal5]]]
+        [[[signal6]]]
+        [[[signal7]]]
+        [[[signal8]]]
+
+    [[volt]]
+        title = Voltage
+        [[[consBatteryVoltage]]]
+        [[[heatingVoltage]]]
+        [[[supplyVoltage]]]
+        [[[referenceVoltage]]]
+
+    [[battery]]
+        title = Battery Status (1 = low)
+        type = line
+        axis_min = 0
+        axis_max = 1
+        [[[outTempBatteryStatus]]]
+        [[[inTempBatteryStatus]]]
+        [[[rainBatteryStatus]]]
+        [[[windBatteryStatus]]]
+        [[[hailBatteryStatus]]]
+        [[[batteryStatus1]]]
+        [[[batteryStatus2]]]
+        [[[batteryStatus3]]]
+        [[[batteryStatus4]]]
+        [[[batteryStatus5]]]
+        [[[batteryStatus6]]]
+        [[[batteryStatus7]]]
+        [[[batteryStatus8]]]
+
+
+[telemetry_week]
+    title = "Telemetry: Last 7 days"
+    show_button = false
+    time_length = 604800
+    tooltip_date_format = "LLLL"
+    gap_size = 7200
+    aggregate_type = avg
+    aggregate_interval = 3600
+
+    [[rx]]
+        title = Signal
+        axis_min = 0
+        [[[rxCheckPercent]]]
+        [[[signal1]]]
+        [[[signal2]]]
+        [[[signal3]]]
+        [[[signal4]]]
+        [[[signal5]]]
+        [[[signal6]]]
+        [[[signal7]]]
+        [[[signal8]]]
+
+    [[volt]]
+        title = Voltage
+        [[[consBatteryVoltage]]]
+        [[[heatingVoltage]]]
+        [[[supplyVoltage]]]
+        [[[referenceVoltage]]]
+
+    [[battery]]
+        title = Battery Status (1 = low)
+        type = line
+        axis_min = 0
+        axis_max = 1
+        [[[outTempBatteryStatus]]]
+        [[[inTempBatteryStatus]]]
+        [[[rainBatteryStatus]]]
+        [[[windBatteryStatus]]]
+        [[[hailBatteryStatus]]]
+        [[[batteryStatus1]]]
+        [[[batteryStatus2]]]
+        [[[batteryStatus3]]]
+        [[[batteryStatus4]]]
+        [[[batteryStatus5]]]
+        [[[batteryStatus6]]]
+        [[[batteryStatus7]]]
+        [[[batteryStatus8]]]
+
+
+[telemetry_month]
+    title = "Telemetry: Last 30 days"
+    show_button = false
+    time_length = 2592000
+    tooltip_date_format = "LLLL"
+    gap_size = 21600
+    aggregate_type = avg
+    aggregate_interval = 10800
+
+    [[rx]]
+        title = Signal
+        axis_min = 0
+        [[[rxCheckPercent]]]
+        [[[signal1]]]
+        [[[signal2]]]
+        [[[signal3]]]
+        [[[signal4]]]
+        [[[signal5]]]
+        [[[signal6]]]
+        [[[signal7]]]
+        [[[signal8]]]
+
+    [[volt]]
+        title = Voltage
+        [[[consBatteryVoltage]]]
+        [[[heatingVoltage]]]
+        [[[supplyVoltage]]]
+        [[[referenceVoltage]]]
+
+    [[battery]]
+        title = Battery Status (1 = low)
+        type = line
+        axis_min = 0
+        axis_max = 1
+        [[[outTempBatteryStatus]]]
+        [[[inTempBatteryStatus]]]
+        [[[rainBatteryStatus]]]
+        [[[windBatteryStatus]]]
+        [[[hailBatteryStatus]]]
+        [[[batteryStatus1]]]
+        [[[batteryStatus2]]]
+        [[[batteryStatus3]]]
+        [[[batteryStatus4]]]
+        [[[batteryStatus5]]]
+        [[[batteryStatus6]]]
+        [[[batteryStatus7]]]
+        [[[batteryStatus8]]]
+
+
+[telemetry_year]
+    title = "Telemetry: Last 365 days"
+    show_button = false
+    time_length = 31536000
+    tooltip_date_format = "LL"
+    gap_size = 172800
+    aggregate_type = avg
+    aggregate_interval = 86400
+
+    [[rx]]
+        title = Signal
+        axis_min = 0
+        [[[rxCheckPercent]]]
+        [[[signal1]]]
+        [[[signal2]]]
+        [[[signal3]]]
+        [[[signal4]]]
+        [[[signal5]]]
+        [[[signal6]]]
+        [[[signal7]]]
+        [[[signal8]]]
+
+    [[volt]]
+        title = Voltage
+        [[[consBatteryVoltage]]]
+        [[[heatingVoltage]]]
+        [[[supplyVoltage]]]
+        [[[referenceVoltage]]]
+
+    [[battery]]
+        title = Battery Status (1 = low)
+        type = line
+        axis_min = 0
+        axis_max = 1
+        [[[outTempBatteryStatus]]]
+        [[[inTempBatteryStatus]]]
+        [[[rainBatteryStatus]]]
+        [[[windBatteryStatus]]]
+        [[[hailBatteryStatus]]]
+        [[[batteryStatus1]]]
+        [[[batteryStatus2]]]
+        [[[batteryStatus3]]]
+        [[[batteryStatus4]]]
+        [[[batteryStatus5]]]
+        [[[batteryStatus6]]]
+        [[[batteryStatus7]]]
+        [[[batteryStatus8]]]

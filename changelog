@@ -1,0 +1,8 @@
+1.0.0 (2026-11-13)
+- First release: the WeeWX 5.5 Seasons skin for Ecowitt gateways.
+- Current conditions and sensor status live from ecwLoop.json (weewx-ecowittGateway 2.0), with the
+  last archive record as fallback.
+- Interactive charts from weewx-echarts 1.0.0 instead of the ImageGenerator plots; charts and lines
+  with no data are left out.
+- No N/A anywhere: only values that are present are shown.
+- Teal/green colours of the WeeWX documentation, with a dark theme.
